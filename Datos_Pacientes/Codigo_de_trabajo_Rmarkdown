@@ -1,0 +1,27 @@
+# **Código utilizado para analizar los datos de los pacientes en estudio**
+
+# Carga, estudio y seteo de datos
+
+```{r Carga de archivo en entorno de trabajo y verificación de información}
+data_raw <- read.csv("LLA_dataset_miRNA_effect_2026", row.names = 1)
+
+str(data_raw)
+
+head(rownames(data_raw))
+head(colnames(data_raw))
+
+dim(data_raw)
+```
+
+```{r Conversión a numérico y búsqueda de valores perdidos}
+# Conversión a numérico
+data <- data.frame(sapply(data_raw, as.numeric))
+
+# Comprobación de valores perdidos
+sum(is.na(data))
+```
+
+```{r Semilla que evita variabilidad en los resultados}
+# Reproducibilidad de las ejecuciones
+set.seed(1234)
+```
