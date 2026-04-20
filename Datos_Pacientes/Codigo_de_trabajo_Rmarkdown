@@ -1,3 +1,27 @@
+title: "Análisis transcriptómico en pacientes con leucemia mieloide aguda tratados con idilimumab"
+author: "Figueroa, L., XXXXXXXXXXXXX, L., XXXXXXXX, M., XXXXXXX, M."
+date: "2026-04-19"
+output: html_document 
+---
+<style>
+p {
+  text-align: justify;
+}
+</style>
+
+El análisis de la expresión génica mediante tecnologías de RNA-seq ha permitido estudiar en profundidad los perfiles transcriptómicos asociados
+a distintas enfermedades, entre ellas el cáncer. Estos datos presentan una alta dimensionalidad, dado que su obtención ha implicado la medición simultánea 
+de múltiples muestras y de los productos de transcripción de un gran número de genes para pacientes en tratamiento, lo que dificulta su interpretación directa.
+
+
+```{r setup}
+library(stats)
+library(ggplot2)
+library(Rtsne)
+library(uwot)
+library(patchwork)
+```
+
 # **Código utilizado para analizar los datos de los pacientes en estudio**
 
 # Carga, estudio y seteo de datos
@@ -26,4 +50,25 @@ sum(is.na(data))
 set.seed(1234)
 ```
 
+```{r umap_plot, fig.width=7, fig.height=7, fig.align="center"}
+# Aplicación del algoritmo UMAP para reducción de dimensionalidad
+umap.results <- umap(data, n_neighbors = 30,
+                     n_components = 2,
+                     min_dist = 0.1,
+                     local_connectivity=1, 
+                     ret_model = TRUE,
+                     verbose = TRUE)
+                     
+# coordenadas en el espacio reducido
+umap.df <- data.frame(umap.results$embedding)
 
+# Representación gráfica de la proyección UMAP
+ggplot(umap.df, aes(x = X1, y = X2, color = labels_raw$Class)) +
+  geom_point(size = 3) +
+  scale_color_manual(values = c("red", "blue", "green", "orange", "purple")) +
+  labs(title = "Proyección de muestras mediante UMAP", x = "X1", y = "X2", color = "Tipo de cáncer") +
+  theme_classic() +
+  theme(panel.grid.major = element_line(color = "gray90"), panel.grid.minor = element_blank(),
+        panel.background = element_rect(fill = "gray95"), plot.title=element_text(hjust=0.5))
+                     
+```                  
