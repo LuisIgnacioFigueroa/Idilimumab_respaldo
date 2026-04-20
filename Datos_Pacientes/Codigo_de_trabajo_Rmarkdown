@@ -25,3 +25,5 @@ sum(is.na(data))
 # Reproducibilidad de las ejecuciones
 set.seed(1234)
 ```
+
+
